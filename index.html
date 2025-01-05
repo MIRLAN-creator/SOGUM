@@ -17,6 +17,7 @@
                     <li><a href="#about">О нас</a></li>
                     <li><a href="#suppliers">Поставщики</a></li>
                     <li><a href="#contacts">Контакты</a></li>
+                    <li><a href="#cart">Корзина</a></li>
                 </ul>
             </nav>
         </div>
@@ -25,19 +26,29 @@
     <section id="catalog" class="container">
         <h2>Каталог продукции</h2>
         <div class="product-list">
-            <div class="product-item">
+            <div class="product-item" data-id="1">
                 <img src="img/beef.jpg" alt="Говядина">
                 <h3>Говядина</h3>
                 <p>Свежая говядина высшего качества</p>
-                <button>Добавить в корзину</button>
+                <p class="price">Цена: 900 сом/кг</p>
+                <button onclick="addToCart(1, 'Говядина', 900)">Добавить в корзину</button>
             </div>
-            <div class="product-item">
+            <div class="product-item" data-id="2">
                 <img src="img/lamb.jpg" alt="Баранина">
                 <h3>Баранина</h3>
                 <p>Отборная баранина с фермы</p>
-                <button>Добавить в корзину</button>
+                <p class="price">Цена: 1100 сом/кг</p>
+                <button onclick="addToCart(2, 'Баранина', 1100)">Добавить в корзину</button>
             </div>
         </div>
+    </section>
+
+    <section id="cart" class="container">
+        <h2>Корзина</h2>
+        <div id="cart-items">
+            <p>Корзина пуста</p>
+        </div>
+        <button onclick="checkout()">Оформить заказ</button>
     </section>
 
     <section id="about" class="container">
@@ -62,5 +73,42 @@
             <p>&copy; 2025 Мясная Лавка. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        let cart = [];
+
+        function addToCart(id, name, price) {
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartContainer = document.getElementById('cart-items');
+            cartContainer.innerHTML = '';
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p>Корзина пуста</p>';
+                return;
+            }
+            cart.forEach(item => {
+                cartContainer.innerHTML += `<p>${item.name} - ${item.quantity} шт. (Цена: ${item.price * item.quantity} сом)</p>`;
+            });
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Корзина пуста!');
+                return;
+            }
+            alert('Ваш заказ оформлен! Спасибо за покупку.');
+            cart = [];
+            updateCart();
+        }
+    </script>
 </body>
 </html>
+
